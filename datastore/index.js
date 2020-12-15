@@ -47,12 +47,24 @@ exports.readAll = (callback) => {
 //'00001.txt' => { id: '00001', text: '00001' }
 
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback(null, { id, text });
-  }
+  // var text = items[id];
+  // if (!text) {
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   callback(null, { id, text });
+  // }
+  var idFileName = id + '.txt';
+  fs.readFile(path.join(exports.dataDir, idFileName), (err, text) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      var foundTodo = {
+        id,
+        text: text.toString()
+      };
+      callback(null, foundTodo);
+    }
+  });
 };
 
 exports.update = (id, text, callback) => {
