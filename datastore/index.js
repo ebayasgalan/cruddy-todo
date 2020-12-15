@@ -13,11 +13,10 @@ exports.create = (text, callback) => {
       throw ('error writing counter');
     } else {
       var idFileName = id + '.txt';
-      // const todoFileContents = fs.readFileSync(path.join(todos.dataDir, `${todo.id}.txt`)).toString();
       var todo = {
         id,
         text
-      }
+      };
       fs.writeFile(path.join(exports.dataDir, idFileName), text, 'utf8', (err) => {
         if (err) {
           throw ('error writing counter');
@@ -33,8 +32,19 @@ exports.readAll = (callback) => {
   var data = _.map(items, (text, id) => {
     return { id, text };
   });
-  callback(null, data);
+  fs.readdir(exports.dataDir, (err, files) => {
+    if (err) {
+      throw ('error writing counter');
+    } else {
+      var todoList = files.reduce((allTodos, currentFile) => {
+        allTodos.push({ id: currentFile.slice(0, 5), text: currentFile.slice(0, 5) });
+        return allTodos;
+      }, []);
+      callback(null, todoList);
+    }
+  });
 };
+//'00001.txt' => { id: '00001', text: '00001' }
 
 exports.readOne = (id, callback) => {
   var text = items[id];
