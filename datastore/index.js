@@ -8,12 +8,25 @@ var items = {}; //object which stores the text of each item
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  var id = counter.getNextUniqueId(); //takes in callback
-  //items[id] = text;
-  var idFileName = id + '.txt';
-  console.log('id: ', id, 'text: ', text);
-  fs.writeFile(path.join('datastore', 'data', idFileName), text, 'utf8', callback);
-  //callback(null, { id, text });
+  counter.getNextUniqueId((err, id) => {
+    if (err) {
+      throw ('error writing counter');
+    } else {
+      var idFileName = id + '.txt';
+      // const todoFileContents = fs.readFileSync(path.join(todos.dataDir, `${todo.id}.txt`)).toString();
+      var todo = {
+        id,
+        text
+      }
+      fs.writeFile(path.join(exports.dataDir, idFileName), text, 'utf8', (err) => {
+        if (err) {
+          throw ('error writing counter');
+        } else {
+          callback(null, todo);
+        }
+      });
+    }
+  });
 };
 
 exports.readAll = (callback) => {

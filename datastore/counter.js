@@ -53,7 +53,6 @@ exports.getNextUniqueId = (callback) => {
         callback(null, newCounter);
       }
     });
-    console.log('counter: ', counter, 'result: ', result);
   });
 };
 
