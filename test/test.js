@@ -130,7 +130,6 @@ describe('todos', () => {
         });
       });
     });
-
   });
 
   describe('readOne', () => {
