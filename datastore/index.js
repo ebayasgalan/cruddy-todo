@@ -3,14 +3,17 @@ const path = require('path');
 const _ = require('underscore');
 const counter = require('./counter');
 
-var items = {};
+var items = {}; //object which stores the text of each item
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  var id = counter.getNextUniqueId();
-  items[id] = text;
-  callback(null, { id, text });
+  var id = counter.getNextUniqueId(); //takes in callback
+  //items[id] = text;
+  var idFileName = id + '.txt';
+  console.log('id: ', id, 'text: ', text);
+  fs.writeFile(path.join('datastore', 'data', idFileName), text, 'utf8', callback);
+  //callback(null, { id, text });
 };
 
 exports.readAll = (callback) => {
