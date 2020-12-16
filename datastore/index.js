@@ -29,22 +29,51 @@ exports.create = (text, callback) => {
 };
 
 exports.readAll = (callback) => {
-  var data = _.map(items, (text, id) => {
-    return { id, text };
-  });
+
+
   fs.readdir(exports.dataDir, (err, files) => {
     if (err) {
       throw ('error writing counter');
     } else {
-      var todoList = files.reduce((allTodos, currentFile) => {
-        allTodos.push({ id: currentFile.slice(0, 5), text: currentFile.slice(0, 5) });
-        return allTodos;
-      }, []);
-      callback(null, todoList);
+      var allTodos = [];
+      files.map((currentFile) => {
+        //read the text of this file
+        return new Promise((resolve, reject) => {
+          return fs.readFile(path.join(exports.dataDir, currentFile), (err, text) => {
+            if (err) {
+              reject(err);
+            } else {
+              allTodos.push({
+                id: currentFile.slice(0, 5),
+                text
+              });
+            }
+          });
+        });
+      });
     }
+    Promise.all(allTodos).then((todo) => {
+      //call callback on allTodos
+      callback(null, allTodos);
+    });
   });
+
 };
 
+// Promise.map(fileNames, function(fileName) {
+//   // Promise.map awaits for returned promises as well.
+//   return fs.readFileAsync(fileName);
+// }).then(function() {
+//   console.log("done");
+// });
+
+// var files = [];
+// for (var i = 0; i < 100; ++i) {
+//     files.push(fs.writeFileAsync("file-" + i + ".txt", "", "utf-8"));
+// }
+// Promise.all(files).then(function() {
+//     console.log("all the files were created");
+// });
 
 exports.readOne = (id, callback) => {
   var idFileName = id + '.txt';
